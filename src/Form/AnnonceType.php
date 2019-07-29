@@ -21,23 +21,25 @@ class AnnonceType extends AbstractType
      *
      * @param string $label
      * @param string $placeholder
+     * @param array $options
      * @return array
      */
-    private function getConfiguration($label,$placeholder) {
-        return [
+    private function getConfiguration($label,$placeholder, $options = []) {
+        return array_merge([
             'label'=>$label,
             'attr' => [
                 'placeholder'=>$placeholder
             ]
-        ];
+        ], $options);
     }
 
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
             ->add('title', TextType::class, $this->getConfiguration('Titre','entrez votre super titre'))
-            ->add('slug', TextType::class,$this->getConfiguration('Adresse Web','tapez l\'adresse web (automatique)'))
+            ->add('slug', TextType::class,$this->getConfiguration('Adresse Web','tapez l\'adresse web (automatique)', ['required' => false ]))
             ->add('coverImage', UrlType::class, $this->getConfiguration('URL de l\'image',"Donnez l'adresse d'une image qui donne vraiment envie"))
             ->add('introduction', TextType::class, $this->getConfiguration('Introduction',"Donnez une description globale de l'annonce"))
             ->add('content', TextareaType::class, $this->getConfiguration('Description détaillé',"Donnez une description qui donne des précisions pour avoir envie de venir chez vous"))
@@ -48,7 +50,8 @@ class AnnonceType extends AbstractType
                 CollectionType::class,
                 [
                     'entry_type' => ImageType::class,
-                    'allow_add' => true
+                    'allow_add' => true,
+                    'allow_delete' =>true
                 ]
                 
                 )
